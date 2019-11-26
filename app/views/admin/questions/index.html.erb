@@ -1,0 +1,54 @@
+<%= provide(:title, "Questions") %>
+<div class="container-fluid">
+    <h1 class="h1 mt-5">Questions</h1>
+    <div class="row d-flex justify-content-between">
+    <%= link_to 'New Question', new_admin_question_path , class: "btn btn-outline-success mt-3 mb-3" %>
+    <form class="form-inline align-items-center mb-3" id="searchAndFilterForm" method="GET">
+    <input type="text" name="page" value="1" hidden>
+          <div class="form-row align-items-center">
+           <div class="col-auto">
+             <label class="my-1 mr-2 d-inline" for="search_key">Search</label>
+             <input type="text" class="form-control mr-3 d-inline" id="search_key" name="search_key" value="<%= @search_key %>" placeholder="For example: juxtaposition">
+           </div>
+          <div class="col-auto">
+            <label class="my-1 mr-2 d-inline" for="order">Order</label>
+            <select class="custom-select mr-3 d-inline" id="order" name="order">
+             <option value="question_az" <%= "selected" if(@order == "question_az") %>>Question A-Z</option>
+             <option value="question_za" <%= "selected" if(@order == "question_za") %>>Question Z-A</option>
+             <option value="id_az" <%= "selected" if(@order == "id_az") %>>ID A-Z</option>
+             <option value="id_za" <%= "selected" if(@order == "id_za") %>>ID Z-A</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button id="search" class="btn btn-primary mb-1">Submit</button>
+          </div>
+         </div>
+        </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Question content</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                  <% @questions.each do |question| %>
+                  <tr>
+                    <td><%= question.id %></td>
+                    <td><%= link_to question.category.name, admin_category_path(question.category) %></td>
+                    <td style="width: 40rem;"><%= question.question_content %></td>
+                    <td>
+                      <%= link_to 'Show', admin_question_path(question),:class => "btn btn-outline-info" %>
+                      <%= link_to 'Edit', edit_admin_question_path(question),:class => "btn btn-outline-warning" %>
+                      <%= link_to 'Destroy', admin_question_path(question), method: :delete, data: { confirm: 'Are you sure?' },:class => "btn btn-outline-danger" %>
+                    </td>
+                  </tr>
+                  <% end %>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <div class="mt-5"><%= will_paginate @questions %></div>
+</div>

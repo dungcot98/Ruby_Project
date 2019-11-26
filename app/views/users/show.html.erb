@@ -1,0 +1,116 @@
+<% provide(:title, "Activities")%>
+<%= render partial: "user_header" %>
+  <div class="container mt-4">
+    <div class="row">
+          <div class="col-12 col-xl-8">
+            <!-- Card -->
+            <% if @tests.count != 0 %>
+              <% @tests.each do |test| %>
+                <div class="card mb-2">
+                  <div class="card-body">                   
+                    <!-- Header -->
+                    <div class="mb-3">
+                      <div class="row align-items-center">
+                        <div class="col-auto">                          
+                          <!-- Avatar -->
+                          <a href="<%= user_path(test.user) %>" class="avatar">
+                            <img src="<%= gravatar_url(test.user.email, 50) %>" alt="" class="avatar-img rounded-circle">
+                          </a>
+
+                        </div>
+                        <div class="col ml-n2">
+                          <!-- Title -->
+                          <h4 class="card-title mb-1">
+                            <%= test.user == @user ? "Me" : test.user.name %>
+                          </h4>
+
+                          <!-- Time -->
+                          <p class="card-text small text-muted">
+                            <span class="fe fe-clock"></span> <time><%= time_ago_in_words(test.updated_at) %> ago</time>
+                          </p>
+                          
+                        </div>
+                      </div> <!-- / .row -->
+                    </div>
+                    <%= render file: 'tests/_result.html.erb', locals: { test: test } %>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <h5 class="text-muted">There is no activity to show</h5>
+            <% end %>
+          </div>
+          <div class="col-12 col-xl-4">
+            
+            <!-- Card -->
+            <div class="card">
+              <div class="card-body">
+
+                <div class="row align-items-center">
+                  <div class="col">              
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Joined
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">                    
+                    <time class="small text-muted" datetime="2018-10-28">
+                      <%= @user.created_at %>
+                    </time>
+
+                  </div>
+                </div> <!-- / .row -->
+
+                <!-- Divider -->
+                <hr>
+
+                <div class="row align-items-center">
+                  <div class="col">
+                    
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Learnt 
+                    </h5>
+
+                  </div>
+                  <div class="col-auto">                    
+                    <a class="badge badge-pill badge-primary p-2"><%= @user.words.count %> words</a>
+                  </div>
+                </div> <!-- / .row -->
+
+                <!-- Divider -->
+                <hr>
+
+                <div class="row align-items-center">
+                  <div class="col">                   
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Following
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <a href="<%= following_user_path(@user) %>" class="badge badge-pill badge-info p-2"><%= @user.following.count %> users</a>
+                  </div>
+                </div> <!-- / .row -->
+
+                <!-- Divider -->
+                <hr>
+
+                <div class="row align-items-center">
+                  <div class="col">                   
+                    <!-- Title -->
+                    <h5 class="mb-0">
+                      Followers
+                    </h5>
+                  </div>
+                  <div class="col-auto">
+                    <a href="<%= followers_user_path(@user) %>" class="badge badge-pill badge-warning p-2"><%= @user.followers.count %> users</a>
+                  </div>
+                </div> <!-- / .row -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+  </div>

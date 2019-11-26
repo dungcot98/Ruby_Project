@@ -1,0 +1,82 @@
+<%= provide(:title, "Categories") %>
+<div class="container">
+    <h1 class="h1 mt-5">Categories</h1>
+    <form class="form-inline align-items-center mb-3" id="searchAndFilterForm" method="GET">
+      <input type="text" name="page" value="1" hidden>
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="my-1 mr-2 d-inline" for="search_key">Search</label>
+          <input type="text" class="form-control mr-3 d-inline" id="search_key" name="search_key" value="<%= @search_key %>" placeholder="For example: juxtaposition">
+        </div>
+        <div class="col-auto">
+          <label class="my-1 mr-2 d-inline" for="order">Order</label>
+          <select class="custom-select mr-3 d-inline" id="order" name="order">
+            <option value="az" <%= "selected" if(@order == "az") %>>A-Z</option>
+            <option value="za" <%= "selected" if(@order == "za") %>>Z-A</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button id="search" class="btn btn-primary mb-2">Submit</button>
+        </div>
+      </div>
+    </form>
+    <div class="row d-flex justify-content-center">
+      <% @categories.each do |category| %>
+        <div class="col-sm-6 col-md-4">
+        <div class="card mb-2">
+          <a href="<%= learn_path(category.id) %>">
+            <% if category.image.attached? %>
+            <%= image_tag category.image.variant(resize: "500x500"), class: "card-img-top img-thumbnail" %>
+            <% else %>
+            <%= image_tag "no-image.png", class: "card-img-top img-thumbnail", style: "max-width: 500px;max-height:500px" %>
+            <% end %>
+          </a>
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col">
+            
+                <!-- Title -->
+                <h4 class="card-title mb-2 name">
+                    <%= link_to category.name, learn_path(category.id) %>
+                </h4>
+
+                <!-- Subtitle -->
+                <p class="card-text small text-muted">
+                  <%= category.words.count %> words
+                </p>
+
+              </div>
+              <%
+=begin%>
+ <div class="col-auto">
+                
+                <!-- Dropdown -->
+                <div class="dropdown">
+                  <a href="#" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fe fe-more-vertical"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#!" class="dropdown-item">
+                      Action
+                    </a>
+                    <a href="#!" class="dropdown-item">
+                      Another action
+                    </a>
+                    <a href="#!" class="dropdown-item">
+                      Something else here
+                    </a>
+                  </div>
+                </div>
+
+              </div> 
+<%
+=end%>
+            </div> <!-- / .row -->
+          </div> <!-- / .card-body -->
+        </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-5"><%= will_paginate @categories %></div>
+</div>

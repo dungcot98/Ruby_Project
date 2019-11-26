@@ -1,0 +1,32 @@
+<% provide(:button_text, 'Create') %>
+<% provide(:title, 'New Answer') %>
+<div class="container">
+  <h1>New Answer</h1>
+  <div class="col-md-6   ">
+    <%= form_with(model: @answer,url:admin_answers_path, local: true) do |form| %>
+      <% if @answer.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@answer.errors.count, "error") %> prohibited this answer from being saved:</h2>
+
+          <ul>
+          <% @answer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+        <%= form.label :question_id %>
+        <%= select "answer", "question_id", @question , { include_blank: false }, { class: "form-control" } %>
+
+        <%= form.label :answer_content %>
+        <%= form.text_area :answer_content, class:'form-control' %>
+
+        <%= form.label :right_answer %>
+        <%= form.check_box :right_answer %>
+        </br>
+      <%= form.submit yield(:button_text), class: "btn btn-outline-primary" %>
+      <%= link_to 'Back', admin_answers_path, class: "btn btn-outline-warning" %>
+    <% end %>
+  </div>
+</div>

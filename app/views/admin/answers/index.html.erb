@@ -1,0 +1,56 @@
+<%= provide(:title, "Answers") %>
+<div class="container-fluid">
+    <h1 class="h1 mt-5">Answers</h1>
+    <div class="row d-flex justify-content-between">
+    <%= link_to 'New Answer', new_admin_answer_path, class: "btn btn-outline-success mt-3 mb-3" %>
+    <form class="form-inline align-items-center mb-3" id="searchAndFilterForm" method="GET">
+          <input type="text" name="page" value="1" hidden>
+          <div class="form-row align-items-center">
+           <div class="col-auto">
+             <label class="my-1 mr-2 d-inline" for="search_key">Search</label>
+             <input type="text" class="form-control mr-3 d-inline" id="search_key" name="search_key" value="<%= @search_key %>" placeholder="For example: juxtaposition">
+           </div>
+          <div class="col-auto">
+            <label class="my-1 mr-2 d-inline" for="order">Order</label>
+            <select class="custom-select mr-3 d-inline" id="order" name="order">
+             <option value="answer_az" <%= "selected" if(@order == "answer_az") %>>Answer A-Z</option>
+             <option value="answer_za" <%= "selected" if(@order == "answer_za") %>>Answer Z-A</option>
+             <option value="id_az" <%= "selected" if(@order == "id_az") %>>ID A-Z</option>
+             <option value="id_za" <%= "selected" if(@order == "id_za") %>>ID Z-A</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button id="search" class="btn btn-primary mb-1">Submit</button>
+          </div>
+         </div>
+        </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Question ID</th>
+                <th>Answer content</th>
+                <th>Right answer</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                <% @answers.each do |answer| %>
+                <tr>
+                  <td><%= answer.id %></td>
+                  <td><%= link_to answer.question_id, admin_question_path(answer.question) %></td>
+                  <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;"><%= answer.answer_content %></td>
+                  <td><%= answer.right_answer %></td>
+                  <td>
+                    <%= link_to  'Show', admin_answer_path(answer),:class => "btn btn-outline-info" %>
+                    <%= link_to 'Edit', edit_admin_answer_path(answer),:class => "btn btn-outline-warning" %>
+                    <%= link_to 'Destroy', admin_answer_path(answer), method: :delete, data: { confirm: 'Are you sure?' },:class => "btn btn-outline-danger" %>
+                  </td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+    <div class="mt-5"><%= will_paginate @answers %></div>
+</div>

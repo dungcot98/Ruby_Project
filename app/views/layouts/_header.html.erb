@@ -1,0 +1,45 @@
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container">
+  <a class="navbar-brand" href="<%= root_url %>"><i class="fas fa-home"></i> Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <%= link_to raw("<i class=\"fas fa-atlas\"></i> Categories"), categories_path, class: 'nav-link' %>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to raw("<i class=\"fas fa-newspaper\"></i> News Feed"), user_path(current_user), class: 'nav-link' %>
+        </li>
+      <% end %>
+      <li class="nav-item">
+        <% if user_signed_in? %>
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-user"></i> <%= current_user.name %>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <% if current_user.admin? %>
+            <%= link_to raw('<i class="fas fa-user-shield"></i> Admin Dashboard'), admin_users_path, class: "dropdown-item" %>
+            <div class="dropdown-divider"></div>
+          <% end %>
+          <%= link_to raw('<i class="far fa-address-card"></i> Profile'), edit_user_registration_path(current_user.id), class: "dropdown-item" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to raw('<i class="fab fa-wikipedia-w"></i> Learnt Words'), learnt_words_path, class: "dropdown-item" %>
+          <div class="dropdown-divider"></div>
+          <%= link_to raw('<i class="fas fa-sign-out-alt"></i> Logout'), logout_path, class: "dropdown-item", method: "delete" %>
+        </div>
+      </li>
+        <% else %>
+        <%= link_to raw('<i class="fas fa-sign-in-alt"></i> Login'), login_path, class: "nav-link" %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+  </div>
+</nav>

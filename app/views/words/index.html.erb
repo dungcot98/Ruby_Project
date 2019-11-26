@@ -1,0 +1,93 @@
+<%= provide(:title, "Learn words about #{@category.name}") %>
+<div class="container">
+  <div class="row d-flex justity-content-center mt-5">
+    <div class="col-md-8">
+      <div class="card border-bottom-primary mb-3">
+        <div class="card-header bg-transparent border-primary"><h2 class="h2">Words List of <%= @category.name %></h2></div>
+        <div class="card-body">
+          <div class="row">
+            <% @words.each do |word| %>
+              <div class="col-12">
+                <div class="card mt-1">
+                  <div class="card-body">
+                    <div class="row d-flex">
+                      <div class="col-sm-6">
+                        <h5 class="card-title text-info d-inline"><%= word.word %></h5>
+                        <p class="text-muted d-inline">(<%= Word.word_class_name(word.word_class) %>)</p>
+                        <p class="text-muted">/<%= word.ipa %>/</p>                         
+                        <p><%= word.meaning %></p>
+                      </div>
+                      <div class="col-sm-6">
+                        <% if word.image.attached? %>
+                          <%= image_tag word.image.variant(resize: "500x500"), class: "card-img-top img-thumbnail" %>
+                        <% end %>
+                      </div>
+                    </div>
+                      <%= form_with model: word, url: word_add_learnt_word_path, method: "post", remote: true, id: "form_#{word.id}"  do |f| %>
+                        <%= hidden_field :word, :id, value: word.id %>
+                        <% if current_user.words.include?(word) %>
+                          <%= hidden_field :word, :option, value: "remove" %>
+                          <%= submit_tag "Remove from list", class: "btn btn-danger", 'data-disable-with' => "Please wait.." %>
+                        <% else %>
+                          <%= hidden_field :word, :option, value: "add" %>
+                          <%= submit_tag "Check as Learnt", class: "btn btn-success", 'data-disable-with' => "Please wait.." %>
+                        <% end %>
+                      <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          </div>
+        </div>   
+      <div class="mt-5"><%= will_paginate @words %></div>
+    </div>
+    <div class="col-md-4">
+          <div class="card border-bottom-success mb-3">
+        <div class="card-header bg-transparent border-success"><h2 class="h2">Filter & Search</h2></div>
+        <div class="card-body">
+            <form class="form" id="searchAndFilterForm" method="GET">
+            <input type="text" name="page" value="1" hidden>
+                <div class="form-group">
+                    <label class="" for="search_key">Search</label>
+                    <input type="text" class="form-control" id="search_key" name="search_key" value="<%= @search_key %>" placeholder="For example: juxtaposition">
+                </div>
+                <div class="form-group">
+                    <label class="my-1 mr-2" for="filter">Filter</label>
+                    <select class="custom-select" id="filter" name="filter">
+                        <option value="all">All</option>
+                        <option value="learnt" <%= "selected" if(@filter == "learnt") %>>Learnt Words</option>
+                        <option value="unlearnt" <%= "selected" if(@filter == "unlearnt") %>>Unlearnt Words</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="my-1 mr-2" for="order">Order</label>
+                    <select class="custom-select" id="order" name="order">
+                        <option value="az" <%= "selected" if(@order == "az") %>>A-Z</option>
+                        <option value="za" <%= "selected" if(@order == "za") %>>Z-A</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button id="search" class="btn btn-primary mb-2">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+        </div>
+      </div>
+      <div class="card border-bottom-success mb-3">
+        <div class="card-header bg-transparent border-success"><h2 class="h2">My Words</h2></div>
+        <div class="card-body" id="words-list">
+          <% @my_words.each do |word| %>
+            <%= render 'word_brief', word: word %>
+          <% end %>
+          <hr>
+          <%= link_to "Full list", "#{learnt_words_path}?category_id=#{@category.id}", class: "h4 mt-3 text-success" %>
+        </div>
+        <div class="card-footer bg-transparent border-success">
+          <%= render file: 'tests/_new_form.html.erb', locals: { :category_id => @category.id } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

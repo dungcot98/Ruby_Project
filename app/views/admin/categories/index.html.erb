@@ -1,0 +1,56 @@
+<%= provide(:title, "Categories") %>
+<div class="container-fluid">
+    <h1 class="h1 mt-5">Categories</h1>
+    <div class="row d-flex justify-content-between">
+    <%= link_to "New Category", new_admin_category_path, class: "btn btn-success mt-3 mb-3" %>
+     <form class="form-inline align-items-center mb-3" id="searchAndFilterForm" method="GET">
+     <input type="text" name="page" value="1" hidden>
+      <div class="form-row align-items-center">
+        <div class="col-auto">
+          <label class="my-1 mr-2 d-inline" for="search_key">Search</label>
+          <input type="text" class="form-control mr-3 d-inline" id="search_key" name="search_key" value="<%= @search_key %>" placeholder="For example: juxtaposition">
+        </div>
+        <div class="col-auto">
+          <label class="my-1 mr-2 d-inline" for="order">Order</label>
+          <select class="custom-select mr-3 d-inline" id="order" name="order">
+            <option value="az" <%= "selected" if(@order == "az") %>>A-Z</option>
+            <option value="za" <%= "selected" if(@order == "za") %>>Z-A</option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button id="search" class="btn btn-primary mb-2">Submit</button>
+        </div>
+      </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Total Words</th>
+                <th>Image</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <% @categories.each do |category| %>
+                  <tr>
+                    <td><%= category.id %></td>
+                    <td><%= category.name %></td>
+                    <td><%= category.words.count %></td>
+                    <td>
+                      <% if category.image.attached? %>
+                       <%= image_tag category.image.variant(resize: "100x100"), class: "card-img-top img-thumbnail" %> 
+                      <% end %>
+                    </td>
+                    <td>
+                      <%= link_to "Edit", edit_admin_category_path(category), :class => "btn btn-outline-info" %> 
+                      <%= link_to "Show", admin_category_path(category),:class => "btn btn-outline-warning"%>
+                      <%= link_to 'Destroy', admin_category_path(category), method: :delete, data: { confirm: 'Are you sure?' },:class => "btn btn-outline-danger" %>
+                    </td>
+                  </tr>
+                <% end %>
+            </tbody>
+        </table>
+      </div>
+    <div class="mt-5"><%= will_paginate @categories %></div>
+</div>
